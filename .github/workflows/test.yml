@@ -12,7 +12,7 @@ jobs:
 
     - name: Get the latest tag
       id: get-latest-tag
-      run: echo "::set-output name=LATEST_TAG::$(git describe --tags `git rev-list --tags --max-count=1`)"
+      run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
 
     - name: Display the latest tag
-      run: echo "The latest tag is ${{ steps.get-latest-tag.outputs.LATEST_TAG }}"
+      run: echo "The latest tag is ${{ env.LATEST_TAG }}"
