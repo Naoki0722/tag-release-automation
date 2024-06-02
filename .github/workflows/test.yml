@@ -45,6 +45,11 @@ jobs:
         echo "new_version=$new_version" >> $GITHUB_ENV
         echo "New version: $new_version"
 
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+
     - name: Create GitHub Tag
       id: create_tag
       run: |
