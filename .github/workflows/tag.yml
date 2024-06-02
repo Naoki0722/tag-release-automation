@@ -15,6 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Fetch all tags and complete history
+        run: git fetch --prune --unshallow --tags
+
       - name: Get the latest tag
         id: get_latest_tag
         run: |
