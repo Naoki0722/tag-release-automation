@@ -63,17 +63,6 @@ jobs:
           git tag -a ${{ env.new_version }} -m "Release ${{ env.new_version }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git ${{ env.new_version }}
 
-      # - name: Create GitHub Release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ env.new_version }}
-      #     release_name: ${{ env.new_version }}
-      #     body: "Automated release for version ${{ env.new_version }}"
-      #     draft: false
-      #     prerelease: false
-
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         env:
