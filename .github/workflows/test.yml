@@ -14,8 +14,33 @@ jobs:
       run: git fetch --prune --unshallow --tags
 
     - name: Get the latest tag
-      id: get-latest-tag
-      run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+      id: get_latest_tag
+      run: |
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
-    - name: Display the latest tag
-      run: echo "The latest tag is ${{ env.LATEST_TAG }}"
+    - name: Determine new version
+      id: new_version
+      run: |
+        latest_tag=${{ env.latest_tag }}
+        IFS='.' read -r -a version_parts <<< "${latest_tag#v}"
+        major=${version_parts[0]}
+        minor=${version_parts[1]}
+        patch=${version_parts[2]}
+
+        # Determine increment type based on PR title
+        pr_title="${{ github.event.pull_request.title }}"
+        if [[ "$pr_title" == *"major"* ]]; then
+          major=$((major + 1))
+          minor=0
+          patch=0
+        elif [[ "$pr_title" == *"minor"* ]]; then
+          minor=$((minor + 1))
+          patch=0
+        else
+          patch=$((patch + 1))
+        fi
+
+        new_version="v$major.$minor.$patch"
+        echo "new_version=$new_version" >> $GITHUB_ENV
+        echo "New version: $new_version"
