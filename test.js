@@ -2,5 +2,5 @@
  * コメント追加
  */
 function Hello() {
-    console.log('Hello world');
+    console.log('Hello world!');
 }
