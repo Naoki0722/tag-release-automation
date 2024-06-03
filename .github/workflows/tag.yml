@@ -25,30 +25,30 @@ jobs:
           echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
       - name: Determine new version
-          id: new_version
-          run: |
-            latest_tag=${{ env.latest_tag }}
-            IFS='.' read -r major minor patch <<< "${latest_tag#v}"
+        id: new_version
+        run: |
+          latest_tag=${{ env.latest_tag }}
+          IFS='.' read -r major minor patch <<< "${latest_tag#v}"
 
-            pr_title="${{ github.event.pull_request.title }}"
-            case "$pr_title" in
-              *major*)
-                major=$((major + 1))
-                minor=0
-                patch=0
-                ;;
-              *minor*)
-                minor=$((minor + 1))
-                patch=0
-                ;;
-              *)
-                patch=$((patch + 1))
-                ;;
-            esac
+          pr_title="${{ github.event.pull_request.title }}"
+          case "$pr_title" in
+            *major*)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            *minor*)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            *)
+              patch=$((patch + 1))
+              ;;
+          esac
 
-            new_version="v$major.$minor.$patch"
-            echo "new_version=$new_version" >> $GITHUB_ENV
-            echo "New version: $new_version"
+          new_version="v$major.$minor.$patch"
+          echo "new_version=$new_version" >> $GITHUB_ENV
+          echo "New version: $new_version"
 
       - name: Configure Git
         run: |
