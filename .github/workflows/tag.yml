@@ -3,7 +3,7 @@ name: Create Release
 on:
   pull_request:
     branches:
-      - master
+      - release/prd
     types: [closed]
 
 jobs:
@@ -28,23 +28,23 @@ jobs:
         id: new_version
         run: |
           latest_tag=${{ env.latest_tag }}
-          IFS='.' read -r -a version_parts <<< "${latest_tag#v}"
-          major=${version_parts[0]}
-          minor=${version_parts[1]}
-          patch=${version_parts[2]}
+          IFS='.' read -r major minor patch <<< "${latest_tag#v}"
 
-          # Determine increment type based on PR title
           pr_title="${{ github.event.pull_request.title }}"
-          if [[ "$pr_title" == *"major"* ]]; then
-            major=$((major + 1))
-            minor=0
-            patch=0
-          elif [[ "$pr_title" == *"minor"* ]]; then
-            minor=$((minor + 1))
-            patch=0
-          else
-            patch=$((patch + 1))
-          fi
+          case "$pr_title" in
+            *major*)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            *minor*)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            *)
+              patch=$((patch + 1))
+              ;;
+          esac
 
           new_version="v$major.$minor.$patch"
           echo "new_version=$new_version" >> $GITHUB_ENV
